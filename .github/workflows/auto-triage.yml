@@ -1,0 +1,21 @@
+name: auto-triage
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'crash-reports/**'
+
+permissions:
+  contents: write
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 tools/auto-triage.py
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "auto-triage: diagnose paired crash reports"
+          file_pattern: 'crash-reports/**'
